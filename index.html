@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Technology Quiz</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f7f9fc;
+            color: #333;
+        }
+        
+        .quiz-container {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            margin-top: 20px;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .student-info {
+            margin-bottom: 30px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #4b5563;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: #3b82f6;
+        }
+        
+        .error-message {
+            color: #ef4444;
+            font-size: 0.875rem;
+            margin-top: 5px;
+            display: none;
+        }
+        
+        .question {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+        
+        .options {
+            margin-bottom: 30px;
+        }
+        
+        .option {
+            display: block;
+            padding: 12px 15px;
+            margin-bottom: 10px;
+            background-color: #f1f5f9;
+            border: 2px solid #e2e8f0;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .option:hover {
+            background-color: #e2e8f0;
+        }
+        
+        .option.selected {
+            background-color: #cbd5e1;
+            border-color: #94a3b8;
+        }
+        
+        .option.correct {
+            background-color: #dcfce7;
+            border-color: #22c55e;
+        }
+        
+        .option.incorrect {
+            background-color: #fee2e2;
+            border-color: #ef4444;
+        }
+        
+        .result-icon {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-weight: bold;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        
+        button {
+            padding: 12px 20px;
+            background-color: #3b82f6;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: background-color 0.3s ease;
+        }
+        
+        button:hover {
+            background-color: #2563eb;
+        }
+        
+        button:disabled {
+            background-color: #94a3b8;
+            cursor: not-allowed;
+        }
+        
+        .progress {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .progress-bar {
+            flex-grow: 1;
+            height: 10px;
+            background-color: #e2e8f0;
+            border-radius: 5px;
+            margin-right: 10px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background-color: #3b82f6;
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+        
+        .score-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        .final-score {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+        
+        .feedback {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+        }
+        
+        .student-details {
+            background-color: #f1f5f9;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        
+        .student-details p {
+            margin: 8px 0;
+        }
+        
+        .student-details strong {
+            color: #4b5563;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .text-center {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="quiz-container">
+        <h1>Web Technology Quiz</h1>
+        
+        <!-- Student Info Page -->
+        <div id="student-info-page">
+            <div class="student-info">
+                <div class="form-group">
+                    <label for="student-name">Full Name</label>
+                    <input type="text" id="student-name" placeholder="Enter your full name">
+                    <div class="error-message" id="name-error">Please enter your name</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="roll-number">Roll Number</label>
+                    <input type="text" id="roll-number" placeholder="Enter your roll number">
+                    <div class="error-message" id="roll-error">Please enter your roll number</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" placeholder="Enter your email address">
+                    <div class="error-message" id="email-error">Please enter a valid email address</div>
+                </div>
+            </div>
+            
+            <div class="text-center">
+                <button id="start-quiz-btn">Start Quiz</button>
+            </div>
+        </div>
+        
+        <!-- Quiz Page -->
+        <div id="quiz" class="hidden">
+            <div class="progress">
+                <div class="progress-bar">
+                    <div id="progress-fill" class="progress-fill"></div>
+                </div>
+                <div id="progress-text">Question 1/10</div>
+            </div>
+            
+            <div id="question-container">
+                <div class="question" id="question"></div>
+                <div class="options" id="options"></div>
+            </div>
+            
+            <div class="controls">
+                <button id="prev-btn" disabled>Previous</button>
+                <button id="next-btn" disabled>Next</button>
+            </div>
+        </div>
+        
+        <!-- Results Page -->
+        <div id="results" class="hidden">
+            <div class="score-container">
+                <div class="student-details" id="student-result-details">
+                    <!-- Student info will be inserted here -->
+                </div>
+                
+                <div class="final-score">Your Score: <span id="score">0</span>/10</div>
+                <div class="feedback" id="feedback"></div>
+                <button id="restart-btn">Take Quiz Again</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const quizData = [
+            {
+                question: "What does HTML stand for?",
+                options: [
+                    "Hyper Text Markup Language",
+                    "High Tech Multi Language",
+                    "Hyper Transfer Markup Language",
+                    "Hyper Text Multiple Language"
+                ],
+                correct: 0
+            },
+            {
+                question: "Which CSS property is used to change the text color of an element?",
+                options: [
+                    "font-color",
+                    "text-color",
+                    "color",
+                    "text-style"
+                ],
+                correct: 2
+            },
+            {
+                question: "What is the correct JavaScript syntax to select an element with id 'demo'?",
+                options: [
+                    "document.getElement('demo')",
+                    "document.getElementById('demo')",
+                    "#demo",
+                    "document.querySelector('#demo')"
+                ],
+                correct: 1
+            },
+            {
+                question: "Which of these is NOT a JavaScript framework or library?",
+                options: [
+                    "React",
+                    "Angular",
+                    "Laravel",
+                    "Vue"
+                ],
+                correct: 2
+            },
+            {
+                question: "What does API stand for?",
+                options: [
+                    "Application Programming Interface",
+                    "Advanced Programming Interface",
+                    "Application Protocol Interface",
+                    "Advanced Protocol Integration"
+                ],
+                correct: 0
+            },
+            {
+                question: "Which attribute is used to define inline styles in HTML?",
+                options: [
+                    "class",
+                    "styles",
+                    "style",
+                    "css"
+                ],
+                correct: 2
+            },
+            {
+                question: "What is the purpose of the localStorage object in JavaScript?",
+                options: [
+                    "To store data that expires when the page session ends",
+                    "To store data with no expiration date",
+                    "To store data only on the server",
+                    "To transfer data between different websites"
+                ],
+                correct: 1
+            },
+            {
+                question: "Which HTTP status code indicates a successful response?",
+                options: [
+                    "404",
+                    "500",
+                    "200",
+                    "302"
+                ],
+                correct: 2
+            },
+            {
+                question: "Which technology is primarily used for creating responsive web designs?",
+                options: [
+                    "JavaScript",
+                    "CSS Media Queries",
+                    "HTML5",
+                    "WebSockets"
+                ],
+                correct: 1
+            },
+            {
+                question: "What does CORS stand for in web development?",
+                options: [
+                    "Cross-Origin Resource Sharing",
+                    "Create Origin Resource Server",
+                    "Cross-Object Response System",
+                    "Create Object Resource Standard"
+                ],
+                correct: 0
+            }
+        ];
+
+        // DOM elements
+        const studentInfoPage = document.getElementById('student-info-page');
+        const quizElement = document.getElementById('quiz');
+        const resultsElement = document.getElementById('results');
+        const questionElement = document.getElementById('question');
+        const optionsElement = document.getElementById('options');
+        const prevButton = document.getElementById('prev-btn');
+        const nextButton = document.getElementById('next-btn');
+        const restartButton = document.getElementById('restart-btn');
+        const startQuizButton = document.getElementById('start-quiz-btn');
+        const progressFill = document.getElementById('progress-fill');
+        const progressText = document.getElementById('progress-text');
+        const scoreElement = document.getElementById('score');
+        const feedbackElement = document.getElementById('feedback');
+        const studentResultDetails = document.getElementById('student-result-details');
+
+        // Form elements
+        const nameInput = document.getElementById('student-name');
+        const rollInput = document.getElementById('roll-number');
+        const emailInput = document.getElementById('email');
+        const nameError = document.getElementById('name-error');
+        const rollError = document.getElementById('roll-error');
+        const emailError = document.getElementById('email-error');
+
+        // Student info
+        let studentName = '';
+        let rollNumber = '';
+        let email = '';
+
+        // Quiz state
+        let currentQuestion = 0;
+        let score = 0;
+        let userAnswers = Array(quizData.length).fill(null);
+        let questionsAnswered = new Set();
+
+        // Validate form and start quiz
+        function startQuiz() {
+            let isValid = true;
+            
+            // Validate name
+            if (!nameInput.value.trim()) {
+                nameError.style.display = 'block';
+                isValid = false;
+            } else {
+                nameError.style.display = 'none';
+                studentName = nameInput.value.trim();
+            }
+            
+            // Validate roll number
+            if (!rollInput.value.trim()) {
+                rollError.style.display = 'block';
+                isValid = false;
+            } else {
+                rollError.style.display = 'none';
+                rollNumber = rollInput.value.trim();
+            }
+            
+            // Validate email
+            const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailInput.value.trim() || !emailPattern.test(emailInput.value.trim())) {
+                emailError.style.display = 'block';
+                isValid = false;
+            } else {
+                emailError.style.display = 'none';
+                email = emailInput.value.trim();
+            }
+            
+            if (isValid) {
+                // Hide student info page and show quiz
+                studentInfoPage.classList.add('hidden');
+                quizElement.classList.remove('hidden');
+                
+                // Initialize quiz
+                initQuiz();
+            }
+        }
+
+        // Initialize quiz
+        function initQuiz() {
+            currentQuestion = 0;
+            score = 0;
+            userAnswers = Array(quizData.length).fill(null);
+            questionsAnswered = new Set();
+            
+            showQuestion(currentQuestion);
+        }
+
+        // Display current question
+        function showQuestion(index) {
+            const question = quizData[index];
+            questionElement.textContent = `${index + 1}. ${question.question}`;
+            
+            optionsElement.innerHTML = '';
+            
+            question.options.forEach((option, i) => {
+                const optionDiv = document.createElement('div');
+                optionDiv.classList.add('option');
+                optionDiv.textContent = option;
+                
+                if (userAnswers[index] !== null) {
+                    // If user has answered this question
+                    if (i === userAnswers[index]) {
+                        optionDiv.classList.add('selected');
+                        
+                        if (i === question.correct) {
+                            optionDiv.classList.add('correct');
+                            optionDiv.innerHTML += '<span class="result-icon">✓</span>';
+                        } else {
+                            optionDiv.classList.add('incorrect');
+                            optionDiv.innerHTML += '<span class="result-icon">✗</span>';
+                        }
+                    } else if (i === question.correct) {
+                        optionDiv.classList.add('correct');
+                        optionDiv.innerHTML += '<span class="result-icon">✓</span>';
+                    }
+                }
+                
+                optionDiv.addEventListener('click', () => selectOption(i));
+                optionsElement.appendChild(optionDiv);
+            });
+            
+            // Update progress
+            progressFill.style.width = `${(index / quizData.length) * 100}%`;
+            progressText.textContent = `Question ${index + 1}/${quizData.length}`;
+            
+            // Update buttons
+            prevButton.disabled = index === 0;
+            nextButton.disabled = userAnswers[index] === null;
+            
+            if (index === quizData.length - 1 && userAnswers[index] !== null) {
+                nextButton.textContent = 'Finish';
+            } else {
+                nextButton.textContent = 'Next';
+            }
+        }
+
+        // Handle option selection
+        function selectOption(optionIndex) {
+            if (userAnswers[currentQuestion] !== null) {
+                return; // Already answered
+            }
+            
+            userAnswers[currentQuestion] = optionIndex;
+            questionsAnswered.add(currentQuestion);
+            
+            // Update score
+            if (optionIndex === quizData[currentQuestion].correct) {
+                score++;
+            }
+            
+            // Show correct/incorrect immediately
+            showQuestion(currentQuestion);
+            
+            // Enable next button
+            nextButton.disabled = false;
+        }
+
+        // Handle next button click
+        function handleNext() {
+            if (currentQuestion < quizData.length - 1) {
+                currentQuestion++;
+                showQuestion(currentQuestion);
+            } else {
+                showResults();
+            }
+        }
+
+        // Handle previous button click
+        function handlePrev() {
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                showQuestion(currentQuestion);
+            }
+        }
+
+        // Show quiz results
+        function showResults() {
+            quizElement.classList.add('hidden');
+            resultsElement.classList.remove('hidden');
+            
+            // Display student info in results
+            studentResultDetails.innerHTML = `
+                <p><strong>Name:</strong> ${studentName}</p>
+                <p><strong>Roll Number:</strong> ${rollNumber}</p>
+                <p><strong>Email:</strong> ${email}</p>
+            `;
+            
+            scoreElement.textContent = score;
+            
+            // Generate feedback message
+            let feedback = '';
+            if (score === quizData.length) {
+                feedback = 'Perfect! You\'re a web technology expert!';
+            } else if (score >= quizData.length * 0.8) {
+                feedback = 'Excellent! You have strong knowledge of web technologies.';
+            } else if (score >= quizData.length * 0.6) {
+                feedback = 'Good job! You have a solid understanding of web technologies.';
+            } else if (score >= quizData.length * 0.4) {
+                feedback = 'Not bad. With a bit more study, you\'ll improve your web tech knowledge.';
+            } else {
+                feedback = 'Keep learning! Web technologies have a learning curve, but you\'ll get there.';
+            }
+            
+            feedbackElement.textContent = feedback;
+        }
+
+        // Restart quiz from the beginning (including student info)
+        function restartQuiz() {
+            resultsElement.classList.add('hidden');
+            studentInfoPage.classList.remove('hidden');
+            
+            // Clear form fields
+            nameInput.value = '';
+            rollInput.value = '';
+            emailInput.value = '';
+        }
+
+        // Event listeners
+        startQuizButton.addEventListener('click', startQuiz);
+        prevButton.addEventListener('click', handlePrev);
+        nextButton.addEventListener('click', handleNext);
+        restartButton.addEventListener('click', restartQuiz);
+    </script>
+</body>
+</html>
